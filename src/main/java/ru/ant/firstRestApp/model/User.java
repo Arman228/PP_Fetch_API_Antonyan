@@ -4,10 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -37,7 +34,7 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 
 
     public User() {
@@ -49,7 +46,7 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public User(String username, String password, String firstName, String lastName, int age, Set<Role> role) {
+    public User(String username, String password, String firstName, String lastName, int age, List<Role> role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -58,7 +55,7 @@ public class User implements UserDetails {
         this.roles = role;
     }
 
-    public User(Integer id, String username, String password, String firstName, String lastName, int age, Set<Role> roles) {
+    public User(Integer id, String username, String password, String firstName, String lastName, int age, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -68,7 +65,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public String convertSetOfRoleToString(Set<Role> roles) {
+    public String convertSetOfRoleToString(List<Role> roles) {
         StringBuilder sb = new StringBuilder();
         for (Role role : roles) {
             if (role.getRoleName().contains("ROLE_ADMIN")) {
@@ -128,27 +125,15 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRole(Set<Role> roles) {
-        this.roles = roles;
-    }
 
-    public void setRoles(String[] roles) {
-        Set<Role> roleSet = new HashSet<>();
-        for (String role : roles) {
-            if (role != null) {
-                if (role.equals("ROLE_ADMIN")) {
-                    roleSet.add(new Role(1, role));
-                }
-                if (role.equals("ROLE_USER")) {
-                    roleSet.add(new Role(2, role));
-                }
-            }
-        }
-        this.roles = roleSet;
+
+    public void setRoles(List<Role> roles) {
+
+        this.roles = roles;
     }
 
     @Override
